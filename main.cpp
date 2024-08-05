@@ -2,24 +2,44 @@
 #include <math.h>
 #include <ctime>
 #include <string>
-#define pi 3.142857 
 
 void init (void) 
 { 
+    //set's outside the box color
     glClearColor(0.529, 0.808, 0.808, 1.0);
 } 
+
+void writeCharacter(int n, char* word){
+    for(int i = 0; i < n; i++){
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, word[i]);
+    };
+}
 
 char project[] = "Digital Clock";
 char name[] = "Amrit Pandey";
 char id[] = "78BCT003";
+char format[] = "HH  MM SS"; 
 
 char hh_mm_ss[10] = "00:00:00";
+char date[]= "2017 12 25";
 const float colorChangeSpeed = 0.01f;
 float colorList[11] = {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.0};
 
 void timer(int){
     time_t now = time(0);
     char* dt = ctime(&now);
+
+    date[0] = dt[0];
+    date[1] = dt[1];
+    date[2] = dt[2];
+    date[3] = dt[3];
+    date[4] = dt[4];
+    date[5] = dt[5];
+    date[6] = dt[6];
+    date[7] = dt[7];
+    date[8] = dt[8];
+    date[9] = dt[9];
+    date[10] = dt[10];
 
     hh_mm_ss[0] = dt[11];
     hh_mm_ss[1] = dt[12];
@@ -76,29 +96,32 @@ void display (void)
     glEnd();
 
     glColor3f(0.0, 0.2, 0.4);
-    glRasterPos2f(-0.62, -0.14);
-
-    for(int i = 0; i < 8; i++){
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, hh_mm_ss[i]);
+    
+    // display time format hh mm ss
+    glRasterPos2f(-0.62, 0.6);
+    for(int i = 0; i < 12; i++){
+        glutBitmapCharacter(GLUT_BITMAP_9_BY_15, format[i]);
     };
+
+    // display time
+    glRasterPos2f(-0.62, -0.14);
+    writeCharacter(8, hh_mm_ss);
+    
+    //display date
+    glRasterPos2f(-0.72, -1.0);
+    writeCharacter(11, date);
 
     // Display Project name
     glRasterPos2f(-9, -7);
-    for(int i=0; i<13; i++){
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, project[i] );
-    };
+    writeCharacter(13, project);
 
     //display author name
     glRasterPos2f(-9, -8);
-    for(int i=0; i<12; i++){
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, name[i] );
-    };
+    writeCharacter(12, name);
 
     //display author id
     glRasterPos2f(-9, -9);
-    for(int i=0; i<8; i++){
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, id[i] );
-    };
+    writeCharacter(8, id);
 
     glutSwapBuffers(); // due to animation 
 
@@ -110,7 +133,7 @@ void reshape(int w, int h){
     glLoadIdentity();
     gluOrtho2D(-10, 10, -10, 10);
     glMatrixMode(GL_MODELVIEW);
-}
+};
 
 int main(int argc, char** argv) {
   glutInit(&argc, argv);
@@ -127,7 +150,3 @@ int main(int argc, char** argv) {
 
   glutMainLoop();
 };
-
-//clock
-//glut_double is for rendering animation
-// we remove 
